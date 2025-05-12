@@ -23,23 +23,31 @@ interface HostInfo {
 }
 
 export const Chat: React.FC = () => {
+
     // Estado temporal para el nickname mientras el usuario lo escribe
     const [tempNick, setTempNick] = useState<string>('');
+
     // Estado que almacena el nickname definitivo del usuario
     const [nickname, setNickname] = useState<string>('');
+
     // Indica si el socket ya se conectó y llegó la info de host
     const [connected, setConnected] = useState<boolean>(false);
+
     // Estado para guardar la información de host/IP recibida
     const [hostInfo, setHostInfo] = useState<HostInfo>({ host: '', ip: '' });
+
     // Estado del mensaje que el usuario va a enviar
     const [message, setMessage] = useState<string>('');
+
     // Historial de mensajes intercambiados
     const [messages, setMessages] = useState<Message[]>([]);
+
     // Referencia al socket, para poder usarlo en distintos callbacks
     const socketRef = useRef<any>(null);
 
     // Efecto que inicializa la conexión al servidor **solo** cuando el usuario elige un nickname
     useEffect(() => {
+
         // Si no hay nickname, no conectamos el socket
         if (!nickname) return;
 
@@ -72,15 +80,19 @@ export const Chat: React.FC = () => {
 
     // Función para enviar un mensaje al servidor
     const sendMessage = () => {
+
         // No enviamos si no hay texto o no estamos conectados
         if (!message.trim() || !connected) return;
 
         // Creamos el objeto mensaje con el autor = nickname
         const msg = { author: nickname, content: message };
+
         // Emitimos al servidor
         socketRef.current.emit('send_message', msg);
+
         // También añadimos el mensaje al historial local
         setMessages(prev => [...prev, msg]);
+        
         // Limpiamos el input de texto
         setMessage('');
     };
